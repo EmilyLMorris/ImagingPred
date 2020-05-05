@@ -1,13 +1,14 @@
 #' STEP 3 IN PNC ANALYSIS - ANALYSIS ON NETWORK
 #' Perform prediction of connectivity using provided covariates.
 #' @param networks list of files containing estimated adjacency matrix for each subject.
-#' @param covariate data.frame containing all covariates.
+#' @param covariates data.frame containing all covariates.
 #' @param method used to specify which approach to use for prediction; default option is "SVM" and"randomForest" is also available.
 #' @param missing.prop double value used to specify the threshold for filtering out covariates if they are missing more than this specified percentage.
 #' @param ID vector of subject IDs that corresponds to the covariate matrix, option to specify if not included in the covariate data.frame.
 #' @param newdata option to provide new data to perform the prediction.
-#' @return List of two items: predicted variables_selected; predicted is a vector of predicted values and variables_selected
-#' is a matrix where a 1 indicates variables (columns) included in the model for a give edge (rows).
+#' @return List of three items: predicted variables_selected; predicted is a vector of predicted values; variables_selected
+#' is a matrix where a 1 indicates variables (columns) included in the model for a give edge (rows); index_edges is the index of which edges were modeled,
+#' some edges may be removed due to lack of variability across subjects.
 #' @export
 prediction.analysis <- function(networks, covariates, method = "SVM", missing.prop = 0.05, ID = NULL, newdata = NULL){
   # library(glmnet)
@@ -28,6 +29,7 @@ prediction.analysis <- function(networks, covariates, method = "SVM", missing.pr
   }
   # filter out those with too little variability
   idx_remove <- which(colMeans(y.save) < 0.05)
+  idx_edges <- which(!(colMeans(y.save) < 0.05))
   y.reduced <- y.save[,-idx_remove]
 
   # match covariates to imaging IDs
@@ -44,12 +46,8 @@ prediction.analysis <- function(networks, covariates, method = "SVM", missing.pr
 
   # remove covariates with too many missing values
   missing <- apply(covariates, 2, function(col)sum(is.na(col))/length(col))
-  idx_missing <- which(missing > missing.prop)  # remove if missing in more than 5% of subjects
-  if(!all(missing < missing.prop)){
-    cov_red <- covariates[idx_cov,-idx_missing]
-  }else{
-    cov_red <- covariates[idx_cov,]
-  }
+  idx_missing <- c(which(missing > missing.prop), which(colnames(covariates) == "subj.id"))  # remove if missing in more than 5% of subjects
+  cov_red <- covariates[idx_cov,-idx_missing]
   cov.red <- cov_red[stats::complete.cases(cov_red),] # reduce to complete cases of remaining covariates
   if(is.null(newdata)){newdata <- cov.red}
 
@@ -57,7 +55,7 @@ prediction.analysis <- function(networks, covariates, method = "SVM", missing.pr
   formula1 <- paste(names(cov.red), collapse = "+")
   fmla <- stats::as.formula(paste( "~", formula1))
 
-  common_id.glm = intersect(fmri.id,cov.red$subj.id)
+  common_id.glm = intersect(fmri.id,covariates$subj.id)
   idx_fmri = match(common_id.glm,fmri.id)
 
   # loop through each edge and do elastic net + SVM/random forest
@@ -66,6 +64,10 @@ prediction.analysis <- function(networks, covariates, method = "SVM", missing.pr
   colnames(variables_selected) <- colnames(cov.red)
   for(i in 1:dim(y.reduced)[2]){
     y.glm <- as.factor(y.reduced[idx_fmri,i]) # reduce to one edge
+    if(length(which(y.glm == 1)) < 5){
+      pred.mat[i,] <- rep(NA, length(y.glm))
+      next
+    } # skip if too little variability in given edge across subjects
     data.fit <- data.frame(y.glm=y.glm, cov.red)
 
     # pred.save <- rep(NA, length=nrow(cov.red))
@@ -101,6 +103,6 @@ prediction.analysis <- function(networks, covariates, method = "SVM", missing.pr
     }
     pred.mat[i,] <- pred_y
   }
-  predicted.values = t(pred.mat) # subjects X edges matrix of predicted yes/no connectivity - or probability of connected?
-  return(list(predicted = predicted.values, variables_selected = variables_selected))
+  predicted.values = t(pred.mat) # subjects X edges matrix of predicted yes/no connectivity
+  return(list(predicted = predicted.values, variables_selected = variables_selected, index_edges = idx_edges))
 }
