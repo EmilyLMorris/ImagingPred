@@ -24,7 +24,7 @@ The following line of code installs the package from GitHub:
     library(devtools)
     devtools::install_github("EmilyLMorris/ImagingPred")
 
-### Example
+### Example 1
 
 Here is a simple example for each of the functions. First read in a
 NIfTI file, this example may take a few minutes to run.
@@ -73,6 +73,8 @@ two ways to perform variable selection and to predict connectivity.
                                    newdata = NULL) 
     results.ex1$predicted.values
     results.ex1$variables_selected
+
+### Example 2
 
 Example using simulated data with some true signal:
 

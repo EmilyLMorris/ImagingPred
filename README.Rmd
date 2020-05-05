@@ -22,7 +22,7 @@ library(devtools)
 devtools::install_github("EmilyLMorris/ImagingPred")
 ```
 
-### Example 
+### Example 1 
 
 Here is a simple example for each of the functions. First read in a NIfTI file, this example may take a few minutes to run. 
 ```{r, eval = FALSE}
@@ -74,6 +74,8 @@ results.ex1$variables_selected
 
 ```
 
+
+### Example 2 
 
 Example using simulated data with some true signal:
 ```{r, eval = FALSE}
