@@ -4,13 +4,15 @@
 \name{true_beta}
 \alias{true_beta}
 \title{Beta used to simulate data for the example}
-\format{A matrix of coefficient values used to simulate data, with 100 rows and
+\format{
+A matrix of coefficient values used to simulate data, with 100 rows and
 10 columns.
 \describe{
   Each row contains the coefficients for each covariate used to simulate connectivity
   data for a given edge in the network. Each row contains the value for the models for each
   edge.
-}}
+}
+}
 \usage{
 true_beta
 }

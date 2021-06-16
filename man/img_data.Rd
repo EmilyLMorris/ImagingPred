@@ -4,11 +4,13 @@
 \name{img_data}
 \alias{img_data}
 \title{Simulated imaging data for example}
-\format{A list of 11 data frames, each with 264 rows and 120 columns.
+\format{
+A list of 11 data frames, each with 264 rows and 120 columns.
 \describe{
 Each row represents the time series for one region of interest in the brain,
 a summary of multiple voxels.
-}}
+}
+}
 \usage{
 img_data
 }

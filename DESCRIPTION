@@ -1,15 +1,15 @@
 Package: ImagingPred
 Type: Package
-Title: Code for performing prediction of functional connectivity using brain imaging data. 
+Title: Code for performing prediction of functional connectivity using brain imaging data 
 Version: 0.1.0
 Author: Emily Morris and Jian Kang
 Maintainer: Emily Morris <emorrisl@umich.edu>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: This package performs the prediction of functional connectivity using 
+    clinical characteristics and can also estimate the functional brain network from NIFTI data. 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Depends: R (>= 3.5.0)
 Imports:
     oro.nifti,

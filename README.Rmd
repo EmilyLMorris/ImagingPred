@@ -69,7 +69,7 @@ results.ex1 = prediction.analysis(networks = networks.list, # network estimates 
                                missing.prop = 0, # can specify a threshold to remove covariates if missing for too many subjects
                                ID = NULL, # specify subject ID to match networks to covariates 
                                newdata = NULL) 
-results.ex1$predicted.values
+results.ex1$predicted
 results.ex1$variables_selected
 
 ```

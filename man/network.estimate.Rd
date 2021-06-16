@@ -5,12 +5,12 @@
 \title{STEP 2 IN PNC ANALYSIS - CONVERT TO NETWORK
 Obtain data in format time x 264 for each subject and convert to network.}
 \usage{
-network.estimate(files, path = NULL)
+network.estimate(images, lambda = FALSE)
 }
 \arguments{
-\item{files}{list of files containing region level summaries of nifti data, one object per subject in the list.}
+\item{images}{list of images containing region level summaries of nifti data, one object per subject in the list.}
 
-\item{path}{location of files}
+\item{lambda}{vector of length n (number of subjects) of lambda used in graphical lasso per subject .}
 }
 \value{
 List of adjacency matrices for each subject.

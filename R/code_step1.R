@@ -44,6 +44,7 @@ read.nifti.files <- function(file.names, path = NULL, method = "average", resolu
       } # fairly slow
       cat("done with nearest neighbor \n")
       idx.img <- which(img[,,,1]!=100, arr.ind = TRUE) # reduce to subset that are actually part of brain
+      n.time <- 120
       nifti.mat.red <- matrix(NA, nrow = 264, ncol = n.time)
       for(region in 1:264){
         idx <- which(loc == region)
